@@ -3,7 +3,7 @@ import argparse
 def get_args():
     parser = argparse.ArgumentParser(description="Model training options")
 
-    parser.add_argument("-backbone", type = str, default = "resnet18", 
+    parser.add_argument("-backbone", type = str, default = "resnet50", 
                         choices=["resnet18", "resnet34", "resnet50"])
     
     parser.add_argument("-csv_dir", type = str, default = "/home/kamal/theme3/structured_project/csv_datasets")
@@ -17,6 +17,8 @@ def get_args():
 
     parser.add_argument("-out_dir", type = str, default = "session")
 
+    parser.add_argument("-num_workers", type = int, default = 8,
+                        choices = [4, 6, 8])
     args = parser.parse_args()
     
     return args
