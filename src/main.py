@@ -15,9 +15,8 @@ def main():
 
     # 2 - iterate among the folds
 
-    for fold in range(1, 6):
-        print(f"\n-- Training Fold {fold + 1} --")
-
+    for fold in range(args.n_splits):
+        print(f"Training on fold:{fold + 1}")
         train_set = pd.read_csv(os.path.join(args.csv_dir, "train_fold{}.csv".format(str(fold))))
         val_set = pd.read_csv(os.path.join(args.csv_dir, "val_fold{}.csv".format(str(fold))))
 
@@ -27,15 +26,17 @@ def main():
 
         #4. Creating data loaders
         train_loader = DataLoader(train_dataset, batch_size= args.batch_size, shuffle=True,
-                                  num_workers = args.num_workers, pin_memory= torch.cuda.is_available())
-        val_loader = DataLoader(val_dataset, batch_size = args.batch_size, shuffle = False,
-                                num_workers = args.num_workers, pin_memory= torch.cuda.is_available())
+                                  num_workers = 2, pin_memory= torch.cuda.is_available())
+        val_loader = DataLoader(val_dataset, batch_size = args.batch_size, shuffle = True,
+                                num_workers = 0, pin_memory= torch.cuda.is_available())
 
         #5. Initializing the model
         model = MyModel(args.backbone).to(device)
 
         #6.
         train_model(model, train_loader, val_loader, fold)
+        
+    print("All folds finished.")
 
 
 if __name__ =="__main__":

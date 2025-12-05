@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import os
 import pandas as pd
+import torch
 
 
 def read_xray(path):
@@ -27,6 +28,9 @@ class Knee_Xray_Dataset(Dataset):
     def __getitem__(self, index):
         img = read_xray(self.dataset["Path"].iloc[index])
         label = self.dataset["KL"].iloc[index]
+
+        img = torch.tensor(img, dtype=torch.float32)           # (3,H,W)
+        label = torch.tensor(label, dtype=torch.long)
 
         res = {
             "img":img,
